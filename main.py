@@ -3,6 +3,7 @@ from random import shuffle
 import sys
 import time
 
+
 global Spades
 global Clubs
 global Hearts
@@ -153,7 +154,6 @@ print('''
   \_____|_|  \___|\__,_|\__\___|\__,_| |_.__/ \__, | |_|  |_|_|  \__,_|_| |_|\__|  \___/\/ |______\__,_| \_/\_/ |_|  \___|_| |_|\___\___|
                                                __/ |                                                                                     
                                               |___/     
-
 ''')
 print("Type 'help' for the commands to play this game!")
 while True:
@@ -178,15 +178,39 @@ while True:
     if command == 'start':
         deal()
         start_command = input('>').lower()
-        if start_command == 'hit':
-            while start_command == 'hit':
-                if start_command == 'hit':
-                    hit()
+        while True:
+            if start_command == 'hit':
+                hit()
+                if player_score > 21:
+                    print('DEALER WINS!!!')
                     break
-                else:
-                    print("Sorry, I don't understand")
-        if start_command == 'stand':
-            while dealer_score < 17:
-                deal_hit()
+                start_command = input('>').lower()
+            if start_command == 'stand':
+                while dealer_score < 17:
+                    deal_hit()
+                if player_score == dealer_score:
+                    print('TIE GAME')
+                    break
+                if player_score == 21:
+                    if player_score == dealer_score:
+                        print('TIE GAME')
+                        break
+                    else:
+                        print('YOU HAVE BLACKJACK!!!')
+                        break
+                if player_score > 21:
+                    print('DEALER WINS!!!')
+                    break
+                if player_score < 21:
+                    if player_score > dealer_score:
+                        print('YOU WIN!!!')
+                        break
+                    if player_score < dealer_score:
+                        if dealer_score > 21:
+                            print('YOU WIN!!!')
+                            break
+                        if dealer_score < 21:
+                            print('DEALER WINS!!!')
+                            break
     else:
         print("Sorry, I don't understand")
