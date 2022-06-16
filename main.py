@@ -12,6 +12,8 @@ Spades = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 Clubs = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 Hearts = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 Diamonds = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+player_hand = []
+dealer_hand = []
 global card_values
 global player_score
 global dealer_score
@@ -26,12 +28,6 @@ def shuffle():
     random.shuffle(Hearts)
     random.shuffle(Diamonds)
 
-def print_slow(str):
-    for letter in str:
-        sys.stdout.write(letter)
-        sys.stdout.flush()
-        time.sleep(0.000001)
-
 def hit():
     suit = random.randint(0, 3)
     global card_values
@@ -45,67 +41,67 @@ def hit():
         suit_symbol = '♠'
         card = Spades[0]
         print_card()
+        player_hand.append(card)
         Spades.remove(card)
         player_score += card_values.get(card)
-        print('Player Score:', player_score)
     if suit == 1:
         suit_symbol = '♣'
         card = Clubs[0]
         print_card()
+        player_hand.append(card)
         Clubs.remove(card)
         player_score += card_values.get(card)
-        print('Player Score:', player_score)
     if suit == 2:
         suit_symbol = '♥'
         card = (Hearts[0])
         print_card()
+        player_hand.append(card)
         Hearts.remove(card)
         player_score += card_values.get(card)
-        print('Player Score:', player_score)
     if suit == 3:
         suit_symbol = '♦'
         card = (Diamonds[0])
         print_card()
+        player_hand.append(card)
         Diamonds.remove(card)
         player_score += card_values.get(card)
-        print('Player Score:', player_score)
+
 def deal_hit():
     suit = random.randint(0, 3)
     global card_values
     global player_score
     global suit_symbol
-    global card
     global dealer_score
-    global suit_symbol
     global card
     if suit == 0:
         suit_symbol = '♠'
         card = Spades[0]
         print_card()
+        dealer_hand.append(card)
         Spades.remove(card)
         dealer_score += card_values.get(card)
-        print('Dealer Score:', dealer_score)
     if suit == 1:
         suit_symbol = '♣'
         card = Clubs[0]
         print_card()
+        dealer_hand.append(card)
         Clubs.remove(card)
         dealer_score += card_values.get(card)
-        print('Dealer Score:', dealer_score)
     if suit == 2:
         suit_symbol = '♥'
         card = (Hearts[0])
         print_card()
+        dealer_hand.append(card)
         Hearts.remove(card)
         dealer_score += card_values.get(card)
-        print('Dealer Score:', dealer_score)
     if suit == 3:
         suit_symbol = '♦'
         card = (Diamonds[0])
         print_card()
+        dealer_hand.append(card)
         Diamonds.remove(card)
         dealer_score += card_values.get(card)
-        print('Dealer Score:', dealer_score)
+
 def deal():
     shuffle()
     print("Dealer's Cards:")
@@ -122,6 +118,8 @@ def deal():
     print("Your Cards:")
     hit()
     hit()
+    print('Dealer Score:', dealer_score)
+    print('Player Score:', player_score)
 
 def print_card():
     print(' -------------')
@@ -134,8 +132,6 @@ def print_card():
     print(f'|            {card}|')
     print(' -------------')
 
-
-command = False
 print('''
  __        __   _                            _          ____  _            _     _            _    _ 
  \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | __ )| | __ _  ___| | __(_) __ _  ___| | _| |
@@ -182,35 +178,70 @@ while True:
             if start_command == 'hit':
                 hit()
                 if player_score > 21:
-                    print('DEALER WINS!!!')
-                    break
+                    if 'A'in player_hand:
+                        player_score -= 10
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        player_hand.remove('A')
+                    else:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        print('DEALER WINS!!!')
+                        break
                 start_command = input('>').lower()
             if start_command == 'stand':
                 while dealer_score < 17:
                     deal_hit()
                 if player_score == dealer_score:
+                    print('Dealer Score:', dealer_score)
+                    print('Player Score:', player_score)
                     print('TIE GAME')
                     break
                 if player_score == 21:
                     if player_score == dealer_score:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
                         print('TIE GAME')
                         break
                     else:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
                         print('YOU HAVE BLACKJACK!!!')
                         break
                 if player_score > 21:
-                    print('DEALER WINS!!!')
-                    break
+                    if 'A'in player_hand:
+                        player_score -= 10
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        player_hand.remove('A')
+                    else:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        print('DEALER WINS!!!')
+                        break
                 if player_score < 21:
                     if player_score > dealer_score:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
                         print('YOU WIN!!!')
                         break
                     if player_score < dealer_score:
                         if dealer_score > 21:
-                            print('YOU WIN!!!')
-                            break
+                            if 'A'in dealer_hand:
+                                dealer_hand -= 10
+                                print('Dealer Score:', dealer_score)
+                                print('Player Score:', player_score)
+                                dealer_hand.remove('A')
+                            else:
+                                print('Dealer Score:', dealer_score)
+                                print('Player Score:', player_score)
+                                print('YOU WIN!!!')
+                                break
                         if dealer_score < 21:
+                            print('Dealer Score:', dealer_score)
+                            print('Player Score:', player_score)
                             print('DEALER WINS!!!')
                             break
+
     else:
         print("Sorry, I don't understand")
