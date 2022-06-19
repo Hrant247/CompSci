@@ -1,8 +1,5 @@
 import random
 from random import shuffle
-import sys
-import time
-
 
 global Spades
 global Clubs
@@ -20,7 +17,26 @@ global dealer_score
 global suit_symbol
 player_score = 0
 dealer_score = 0
-card_values = {"A": 11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "10":10, "J":10, "Q":10, "K":10}
+card_values = {"A": 11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "X":10, "J":10, "Q":10, "K":10}
+
+def redeal():
+    global Spades
+    global Clubs
+    global Hearts
+    global Diamonds
+    Spades = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+    Clubs = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+    Hearts = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+    Diamonds = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+    player_hand = []
+    dealer_hand = []
+    global card_values
+    global player_score
+    global dealer_score
+    global suit_symbol
+    player_score = 0
+    dealer_score = 0
+    card_values = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "X": 10, "J": 10, "Q": 10,"K": 10}
 
 def shuffle():
     random.shuffle(Spades)
@@ -104,17 +120,8 @@ def deal_hit():
 
 def deal():
     shuffle()
-    print("Dealer's Cards:")
+    print("Dealer's Card:")
     deal_hit()
-    print(' -------------')
-    print(f'|?            |')
-    print('''|             |
-|             |''')
-    print(f'|      ?      |')
-    print('''|             |
-|             |''')
-    print(f'|            ?|')
-    print(' -------------')
     print("Your Cards:")
     hit()
     hit()
@@ -122,15 +129,15 @@ def deal():
     print('Player Score:', player_score)
 
 def print_card():
-    print(' -------------')
-    print(f'|{card}            |')
-    print('''|             |
-|             |''')
-    print(f'|      {suit_symbol}      |')
-    print('''|             |
-|             |''')
-    print(f'|            {card}|')
-    print(' -------------')
+    print('╔═════════════╗')
+    print(f'║{card}            ║')
+    print('''║             ║
+║             ║''')
+    print(f'║      {suit_symbol}      ║')
+    print('''║             ║
+║             ║''')
+    print(f'║            {card}║')
+    print('╚═════════════╝')
 
 print('''
  __        __   _                            _          ____  _            _     _            _    _ 
@@ -159,7 +166,9 @@ while True:
         rules - rules of the game Blackjack
         start - start a game
         quit - to end and quit the game
-        ''')
+        hit - to hit a card
+        stand - to end your turn''')
+        command = input('>').lower()
     if command == 'rules':
         print('''This Blackjack is a single player game where the player plays against the dealer.\n
         The dealer deals a card, your goal as the player is to try to get to as close to 21 without exceeding it.\n
@@ -167,16 +176,41 @@ while True:
         You may also preform a stand. Stand means that you don't want to add anymore cards to your own hand.\n
         After you stand the dealer reveals his cards , where he has been playing the same game as you!\n
         Whichever person is closer to 21 wins! If you or the dealer go over 21, you lose. If its a tie,\n
-        nothing happens. In Blackjack an ace can be a 1 or an 11 depending on your hand.         
-        ''')
+        nothing happens. In Blackjack an ace can be a 1 or an 11 depending on your hand.''')
+        command = input('>').lower()
     if command == 'quit':
         break
     if command == 'start':
+        redeal()
         deal()
         start_command = input('>').lower()
         while True:
+            if start_command == 'help':
+                print('''
+                rules - rules of the game Blackjack
+                start - start a game
+                quit - to end and quit the game
+                ''')
+            if start_command == 'rules':
+                print('''This Blackjack is a single player game where the player plays against the dealer.\n
+                The dealer deals a card, your goal as the player is to try to get to as close to 21 without exceeding it.\n
+                You can do this by hitting. Preforming a hit tells the dealer to place another card.\n
+                You may also preform a stand. Stand means that you don't want to add anymore cards to your own hand.\n
+                After you stand the dealer reveals his cards , where he has been playing the same game as you!\n
+                Whichever person is closer to 21 wins! If you or the dealer go over 21, you lose. If its a tie,\n
+                nothing happens. In Blackjack an ace can be a 1 or an 11 depending on your hand.         
+                ''')
+                break
+            if start_command == 'quit':
+                print('''Are you sure you want to quit? 
+                This program will shutdown.
+                (type quit to confirm)''')
+                break
             if start_command == 'hit':
                 hit()
+                if player_score < 21:
+                    print('Dealer Score:', dealer_score)
+                    print('Player Score:', player_score)
                 if player_score > 21:
                     if 'A'in player_hand:
                         player_score -= 10
@@ -188,7 +222,6 @@ while True:
                         print('Player Score:', player_score)
                         print('DEALER WINS!!!')
                         break
-                start_command = input('>').lower()
             if start_command == 'stand':
                 while dealer_score < 17:
                     deal_hit()
@@ -207,6 +240,17 @@ while True:
                         print('Dealer Score:', dealer_score)
                         print('Player Score:', player_score)
                         print('YOU HAVE BLACKJACK!!!')
+                        break
+                if dealer_score == 21:
+                    if player_score == dealer_score:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        print('TIE GAME')
+                        break
+                    else:
+                        print('Dealer Score:', dealer_score)
+                        print('Player Score:', player_score)
+                        print('DEALER HAS BLACKJACK!!!')
                         break
                 if player_score > 21:
                     if 'A'in player_hand:
@@ -228,7 +272,7 @@ while True:
                     if player_score < dealer_score:
                         if dealer_score > 21:
                             if 'A'in dealer_hand:
-                                dealer_hand -= 10
+                                dealer_score -= 10
                                 print('Dealer Score:', dealer_score)
                                 print('Player Score:', player_score)
                                 dealer_hand.remove('A')
@@ -242,6 +286,12 @@ while True:
                             print('Player Score:', player_score)
                             print('DEALER WINS!!!')
                             break
-
+            if start_command == 'start':
+                redeal()
+                deal()
+                start_command = input('>').lower()
+            else:
+                print("Sorry, I don't understand")
+                start_command = input('>').lower()
     else:
         print("Sorry, I don't understand")
