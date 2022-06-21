@@ -7,16 +7,18 @@ global Hearts
 global Diamonds
 global player_hand
 global dealer_hand
-Spades = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-Clubs = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-Hearts = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-Diamonds = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+Spades = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+Clubs = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+Hearts = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
+Diamonds = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
 player_hand = []
 dealer_hand = []
 global card_values
 global player_score
 global dealer_score
 global suit_symbol
+global suit_color
+suit_color = ''
 player_score = 0
 dealer_score = 0
 card_values = {"A": 11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "X":10, "J":10, "Q":10, "K":10}
@@ -30,6 +32,8 @@ def redeal():
     global Clubs
     global Hearts
     global Diamonds
+    global player_hand
+    global dealer_hand
     Spades = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
     Clubs = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
     Hearts = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"]
@@ -40,6 +44,8 @@ def redeal():
     global player_score
     global dealer_score
     global suit_symbol
+    global suit_color
+    suit_color  = ''
     player_score = 0
     dealer_score = 0
     card_values = {"A": 11, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "X": 10, "J": 10, "Q": 10,"K": 10}
@@ -61,8 +67,10 @@ def hit():
     global dealer_score
     global suit_symbol
     global card
+    global suit_color
     if suit == 0:
         suit_symbol = '♠'
+        suit_color = 'Black'
         card = Spades[0]
         print_card()
         player_hand.append(card)
@@ -72,6 +80,7 @@ def hit():
         player_score = sum(player_hand_values)
     if suit == 1:
         suit_symbol = '♣'
+        suit_color = 'Black'
         card = Clubs[0]
         print_card()
         player_hand.append(card)
@@ -81,6 +90,7 @@ def hit():
         player_score = sum(player_hand_values)
     if suit == 2:
         suit_symbol = '♥'
+        suit_color = 'Red'
         card = (Hearts[0])
         print_card()
         player_hand.append(card)
@@ -90,6 +100,7 @@ def hit():
         player_score = sum(player_hand_values)
     if suit == 3:
         suit_symbol = '♦'
+        suit_color = 'Red'
         card = (Diamonds[0])
         print_card()
         player_hand.append(card)
@@ -105,8 +116,10 @@ def deal_hit():
     global suit_symbol
     global dealer_score
     global card
+    global suit_color
     if suit == 0:
         suit_symbol = '♠'
+        suit_color = 'Black'
         card = Spades[0]
         print_card()
         dealer_hand.append(card)
@@ -116,6 +129,7 @@ def deal_hit():
         dealer_score = sum(dealer_hand_values)
     if suit == 1:
         suit_symbol = '♣'
+        suit_color = 'Black'
         card = Clubs[0]
         print_card()
         dealer_hand.append(card)
@@ -125,6 +139,7 @@ def deal_hit():
         dealer_score = sum(dealer_hand_values)
     if suit == 2:
         suit_symbol = '♥'
+        suit_color = 'Red'
         card = (Hearts[0])
         print_card()
         dealer_hand.append(card)
@@ -134,6 +149,7 @@ def deal_hit():
         dealer_score = sum(dealer_hand_values)
     if suit == 3:
         suit_symbol = '♦'
+        suit_color = 'Red'
         card = (Diamonds[0])
         print_card()
         dealer_hand.append(card)
@@ -153,17 +169,28 @@ def deal():
     print(name + "'s Score:", player_score)
 
 def print_card():
-    print('╒═════════════╕')
-    print(f'│{card}            │')
-    print('''│             │
-│             │''')
-    print(f'│      {suit_symbol}      │')
-    print('''│             │
-│             │''')
-    print(f'│            {card}│')
-    print('╘═════════════╛')
+    if suit_color == 'Black':
+        print('\033[01m\033[30m\033[107m╒═════════════╕\033[0m')
+        print(f'\033[01m\033[30m\033[107m│{card}            │\033[0m')
+        print('''\033[01m\033[30m\033[107m│             │\033[0m
+\033[01m\033[30m\033[107m│             │\033[0m''')
+        print(f'\033[01m\033[30m\033[107m│      {suit_symbol}      │\033[0m')
+        print('''\033[01m\033[30m\033[107m│             │\033[0m
+\033[01m\033[30m\033[107m│             │\033[0m''')
+        print(f'\033[01m\033[30m\033[107m│            {card}│\033[0m')
+        print('\033[01m\033[30m\033[107m╘═════════════╛\033[0m\n')
+    elif suit_color == 'Red':
+        print('\033[01m\033[31m\033[107m╒═════════════╕\033[0m')
+        print(f'\033[01m\033[31m\033[107m│{card}            │\033[0m')
+        print('''\033[01m\033[31m\033[107m│             │\033[0m
+\033[01m\033[31m\033[107m│             │\033[0m''')
+        print(f'\033[01m\033[31m\033[107m│      {suit_symbol}      │\033[0m')
+        print('''\033[01m\033[31m\033[107m│             │\033[0m
+\033[01m\033[31m\033[107m│             │\033[0m''')
+        print(f'\033[01m\033[31m\033[107m│            {card}│\033[0m')
+        print('\033[01m\033[31m\033[107m╘═════════════╛\033[0m\n')
 
-print('''
+print('''\033[107m\033[01m\033[30m
  __        __   _                            _          ____  _            _     _            _    _ 
  \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | __ )| | __ _  ___| | __(_) __ _  ___| | _| |
   \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \  |  _ \| |/ _` |/ __| |/ /| |/ _` |/ __| |/ / |
@@ -172,7 +199,7 @@ print('''
                                                                               |__/
 ''')
 
-print('''
+print('''\033[31m
     ____               ___         ___ ___           ___  ___               ___            ___                 
   / ____|              | |         | | | |           | |  | |               | |     ___    | |                                           
  | |     _ __ ___  __ _| |_ ___  __| | | |__  _   _  | |__| |_ __ __ _ _ __ | |_   ( _ )   | |     __ ___      ___ __ ___ _ __   ___ ___ 
@@ -180,7 +207,8 @@ print('''
  | |____| | |  __/ (_| | ||  __/ (_| | | |_) | |_| | | |  | | | | (_| | | | | |_  | (_>  < | |___| (_| |\ V  V /| | |  __/ | | | (_|  __/
   \_____|_|  \___|\__,_|\__\___|\__,_| |_.__/ \__, | |_|  |_|_|  \__,_|_| |_|\__|  \___/\/ |______\__,_| \_/\_/ |_|  \___|_| |_|\___\___|
                                                __/ |                                                                                     
-                                              |___/     
+                                              |___/ 
+\033[0m\n    
 ''')
 print("Type 'help' for the commands to play this game!")
 while True:
